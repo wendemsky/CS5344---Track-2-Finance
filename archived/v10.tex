@@ -1,0 +1,290 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage[htt]{hyphenat}
+
+% Hyperref link colors (no red in ToC)
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black
+}
+
+% Table column helpers and spacing for Appendix tables
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.2}
+\sloppy
+
+% Header and footer setup
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS5344 Big Data Analytics}
+\lhead{Loan Anomaly Detection}
+\cfoot{\thepage}
+
+\title{\textbf{Loan Anomaly Detection for Repayment Behavior Analysis} \\
+       \large CS5344 Big Data Analytics Track 2: Finance}
+\author{Team Project Proposal}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+
+In the modern financial landscape, accurate prediction of loan defaults is crucial for risk management and maintaining portfolio stability. Traditional credit scoring models primarily rely on static borrower characteristics at loan origination, potentially missing dynamic patterns that emerge during the loan lifecycle. This project addresses the challenge of \textbf{loan-level anomaly detection for repayment behavior}, where we analyze both static borrower information and temporal performance sequences to identify loans that exhibit abnormal repayment patterns.
+
+The problem is formulated as a semi-supervised learning task where the training dataset contains exclusively normal loans (loans that meet their obligations), while the validation and test sets include both normal and abnormal loans. This mirrors real-world scenarios where financial institutions have abundant historical data on performing loans but limited labeled examples of defaults during model development phases.
+
+Our approach leverages the rich temporal structure inherent in loan performance data, combining static origination features with dynamic monthly performance indicators to detect anomalous repayment behaviors that may signal impending default or other adverse outcomes.
+
+\section{Project Objective}
+
+The primary objective of this project is to develop a robust anomaly detection system capable of identifying loans with abnormal repayment patterns using a combination of static borrower characteristics and temporal performance sequences. Specifically, we aim to maximize the Average Precision (AUPRC) score for detecting abnormal loans in an imbalanced dataset (87.39\% normal vs 12.61\% abnormal), design a semi-supervised learning framework that effectively learns normal loan behavior patterns from training data containing only normal loans, develop sophisticated feature engineering techniques that capture both static risk factors and temporal dynamics in loan performance, and create an interpretable and scalable solution suitable for deployment in real-world financial risk management systems.
+
+The success of our approach will be measured primarily by the Average Precision metric, which is particularly appropriate for imbalanced binary classification problems as it focuses on the precision-recall trade-off rather than overall accuracy.
+
+\section{Target Task}
+
+Our target task is \textbf{semi-supervised anomaly detection} in the financial domain, specifically focused on loan repayment behavior analysis. The task is formulated as binary classification where we predict whether a loan exhibits normal (0) or abnormal (1) repayment behavior patterns.
+
+The learning paradigm follows semi-supervised learning principles, as the training data contains only normal examples (30{,}504 loans with target=0), while validation data contains both classes (4{,}693 normal, 677 abnormal loans). Each loan $i$ is represented as:
+\begin{equation}
+x_i = (s_i, (t_{i,1}, r_{i,1}), (t_{i,2}, r_{i,2}), \ldots, (t_{i,T_i}, r_{i,T_i}), y_i)
+\end{equation}
+where $s_i$ represents static loan information (borrower attributes, loan terms), $\{t_{i,k}\}_{k=1}^{T_i}$ are time periods with $t_{i,1} < \ldots < t_{i,T_i}$, $T_i = 14$ represents the number of months for loan $i$ (consistent across dataset), $r_{i,k}$ is the monthly repayment information vector at time $t_{i,k}$, and $y_i \in \{0, 1\}$ is the binary label (0=normal, 1=abnormal).
+
+The challenge lies in learning meaningful representations that capture both static risk factors and temporal patterns indicative of abnormal repayment behavior, without having access to labeled abnormal examples during the training phase.
+
+\section{Dataset}
+
+Our dataset consists of loan-level data from the Freddie Mac Single-Family Loan-Level Dataset, comprising 30{,}504 training loans $\times$ 145 features (100\% normal loans), 5{,}370 validation loans $\times$ 145 features (87.39\% normal, 12.61\% abnormal), and 13{,}426 test loans $\times$ 144 features (unlabeled for competition submission).
+
+The feature structure includes 31 static origination variables encompassing borrower credit score (mean=753.6, std=156.1), original unpaid principal balance (mean=\$317K, std=\$181K), loan-to-value ratio (mean=75.2\%, std=19.4\%), original interest rate (mean=6.72\%, std=0.55\%), debt-to-income ratio, loan terms, property characteristics, and demographic information. Additionally, 112 temporal features provide monthly performance data spanning exactly 14 months for all loans, tracking eight performance metrics: CurrentActualUPB, CurrentInterestRate, CurrentNonInterestBearingUPB, EstimatedLTV, InterestBearingUPB, LoanAge, MonthlyReportingPeriod, and RemainingMonthsToLegalMaturity.
+
+Exploratory data analysis reveals consistent temporal structure with all loans having complete 14-month sequences, mixed data types (71 integer, 60 float, 14 categorical features), and credit quality distribution ranging from 600-850 (excluding missing value code 9999). Critical data quality issues include zero missing values across temporal features but significant missingness in static features: ReliefRefinanceIndicator (100\% missing), PreHARP\_Flag (100\% missing), SuperConformingFlag (98.92\% missing), and MSA (11.22\% missing).
+
+\section{Challenges}
+
+Several significant challenges characterize this dataset and task. The semi-supervised learning paradigm requires models to learn patterns of normality without exposure to abnormal examples during training, while validation data mixing necessitates careful evaluation strategies to avoid data leakage. Severe class imbalance with only 12.61\% abnormal loans in the validation set makes standard accuracy metrics misleading, establishing Average Precision (AUPRC) as the critical evaluation metric.
+
+The high-dimensional mixed-type feature space (145 features combining numerical, categorical, and temporal data) presents curse of dimensionality challenges for neighborhood-based methods, requiring effective feature selection and dimensionality reduction. Temporal complexity manifests through variable importance across different time periods and complex dependencies, necessitating balance between modeling sophistication and computational efficiency.
+
+Domain-specific challenges include borrower and product heterogeneity across different loan types, economic cycle effects on repayment patterns, and regulatory influences on loan performance. Special encoding schemes (999, 9999) for missing values in critical features like DTI and CreditScore require domain-aware imputation strategies that distinguish between truly missing data and ``not applicable'' cases.
+
+\section{Literature Survey}
+
+Credit anomaly detection has been widely explored using statistical, machine learning, and deep learning approaches. Traditional models such as logistic regression and discriminant analysis were among the earliest techniques, offering interpretability but limited ability to capture complex borrower--loan interactions \cite{bolton2002}. Ensemble learning methods like Random Forests and Gradient Boosted Trees improved detection accuracy, though at the cost of reduced transparency \cite{breiman2001}.
+
+With the rise of deep learning, methods such as autoencoders and recurrent neural networks (RNNs) have been applied to credit data. Autoencoders identify anomalies by reconstructing normal repayment patterns and flagging deviations, while long short-term memory (LSTM) networks and gated recurrent units (GRUs) effectively capture sequential dependencies in loan repayment histories \cite{chalapathy2019}. Although these models achieve strong performance, their lack of interpretability and high computational demand remain challenges in regulated financial environments.
+
+Hybrid approaches have emerged to combine static borrower features with dynamic repayment sequences. Attention mechanisms and temporal convolutional networks have been used to model long-range dependencies while maintaining some interpretability \cite{zhang2021}. These methods aim to bridge the gap between accuracy and explainability.
+
+More recently, probabilistic graphical models have resurfaced as a promising direction. A 2025 study introduced a Credit Anomaly Detection Method based on Bayesian Networks, capturing causal dependencies between borrower attributes and repayment behaviors \cite{li2025}. By modeling conditional probabilities, Bayesian networks balance performance with transparency, aligning with the financial industry's growing emphasis on trustworthy and explainable AI.
+
+Overall, the literature reflects a shift from purely predictive black-box models toward approaches that integrate accuracy with interpretability, a trend critical for adoption in high-stakes financial decision-making.
+
+\section{Experimental Comparison}
+
+We evaluated several classical anomaly detection approaches on our dataset to identify the most promising direction. The comparison includes density-based methods (LOF variants), global outlier detectors (Isolation Forest), reconstruction-based approaches (PCA), and distance-based methods (K-Means).
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{AUPRC} & \textbf{AUROC} \\
+\midrule
+\textbf{Multi-$k$ LOF (weighted)} & \textbf{0.2220} & 0.6062 \\
+LOF (optimized $k=10$) & 0.1956 & 0.5752 \\
+LOF + PCA & 0.1867 & 0.5486 \\
+Isolation Forest & 0.1303 & 0.5107 \\
+PCA Reconstruction & 0.1247 & 0.5034 \\
+K-Means Distance & 0.1100 & 0.4534 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The results demonstrate that Local Outlier Factor (LOF) variants consistently outperform global methods, with the multi-$k$ weighted ensemble achieving the best performance (AUPRC = 0.2220). This superior performance aligns with the heterogeneous nature of our loan dataset, where local density comparisons prove more effective than global assumptions about anomaly distributions.
+
+\section{Intended Approach}
+
+Based on our experimental results, we propose a LOF-centered ensemble approach that leverages the superior local density estimation capabilities demonstrated in our baseline comparisons. Our methodology follows a systematic pipeline designed for semi-supervised anomaly detection while maintaining interpretability and computational efficiency.
+
+The core approach involves training multiple LOF detectors with varying neighborhood parameters ($k \in \{5,6,7,8\}$) on normal training data only, then combining their anomaly scores through weighted aggregation. This multi-scale approach captures both fine-grained local patterns and broader neighborhood structures, addressing the heterogeneity observed in loan repayment behaviors.
+
+Our preprocessing pipeline handles domain-specific challenges including special missing value encodings (999, 9999) and mixed data types through consistent imputation and scaling strategies. The ensemble combination weights are optimized using a held-out portion of the validation set, ensuring that hyperparameter selection does not compromise model generalization.
+
+To enhance detection capability, we incorporate engineered features capturing repayment irregularities, such as deviations from expected amortization schedules. These domain-informed features provide additional signals that complement the density-based anomaly scores from the LOF ensemble.
+
+The approach maintains strict separation between training and evaluation phases: all unsupervised components are fitted exclusively on normal training data, validation labels are used only for hyperparameter selection, and final performance assessment occurs on an untouched holdout subset.
+
+\section{Future Enhancements}
+
+We plan to explore cluster-aware LOF implementations that perform density estimation within borrower segments, potentially improving anomaly detection precision for specific credit tiers. Additionally, adaptive neighborhood selection mechanisms could dynamically adjust $k$ values based on local data density characteristics, further optimizing the LOF performance across diverse loan portfolios.
+
+\section{References}
+
+\begin{thebibliography}{9}
+
+\bibitem{bolton2002}
+Bolton, R. J., \& Hand, D. J. (2002). Statistical fraud detection: A review. \emph{Statistical Science}, 17(3), 235--255.
+
+\bibitem{breiman2001}
+Breiman, L. (2001). Random forests. \emph{Machine Learning}, 45(1), 5--32.
+
+\bibitem{chalapathy2019}
+Chalapathy, R., \& Chawla, S. (2019). Deep learning for anomaly detection: A survey. \emph{ACM Computing Surveys}, 51(5), 1--36.
+
+\bibitem{zhang2021}
+Zhang, H., Yao, L., Sun, A., \& Tay, Y. (2021). Deep learning for sequential recommendation: Algorithms, influential factors, and evaluations. \emph{ACM Transactions on Information Systems}, 39(1), 1--42.
+
+\bibitem{li2025}
+Li, Y., Chen, W., \& Zhao, J. (2025). Credit anomaly detection method based on Bayesian networks. \emph{Journal of Applied Finance and Banking}, 15(1), 44--59.
+
+\end{thebibliography}
+
+% ---------------------------
+% Appendix (single ToC entry; no overlaps)
+% ---------------------------
+\appendix
+\addcontentsline{toc}{section}{Appendix}
+
+% Use starred sections in Appendix so only one ToC entry appears
+\section*{A. Dataset Column Descriptions}
+\label{appendix:dataset}
+
+The tables below describe the key columns used in this project. (Some fields are masked or use special codes; we preprocess those consistently.)
+
+\subsection*{Basic Identifiers}
+{\small
+\begin{longtable}{|L{4cm}|L{10.5cm}|}
+\hline
+\textbf{Column} & \textbf{Description} \\
+\hline
+index & Unique identifier for each loan \\
+\hline
+target & Binary label: 0 = normal, 1 = abnormal \\
+\hline
+\end{longtable}
+}
+
+\subsection*{Origination (Static) Variables}
+{\small
+\begin{longtable}{|L{4cm}|L{10.5cm}|}
+\hline
+\textbf{Column} & \textbf{Description} \\
+\hline
+CreditScore & Borrower credit score at origination (300--850); 9999 may indicate missing \\
+\hline
+FirstPaymentDate & First scheduled payment month (YYYYMM) \\
+\hline
+FirstTimeHomebuyerFlag & Y = Yes, N = No, 9 = Not Available \\
+\hline
+MaturityDate & Scheduled maturity month (YYYYMM) \\
+\hline
+MSA & Metropolitan Statistical Area code (may be null) \\
+\hline
+MI\_Pct & Mortgage insurance percentage; 0 = none; 999 may indicate missing \\
+\hline
+NumberOfUnits & Number of dwelling units (1--4) \\
+\hline
+OccupancyStatus & P = Primary, I = Investment, S = Second Home, 9 = Not Available \\
+\hline
+OriginalCLTV & Combined Loan-to-Value ratio at origination \\
+\hline
+OriginalDTI & Debt-to-Income ratio (\%); 999 may indicate missing \\
+\hline
+OriginalUPB & Original unpaid principal balance (nearest \$1{,}000) \\
+\hline
+OriginalLTV & Loan-to-Value ratio at origination; 999 may indicate missing \\
+\hline
+OriginalInterestRate & Note rate at origination (\%) \\
+\hline
+Channel & R = Retail, B = Broker, C = Correspondent, T = TPO Not Specified, 9 = Not Available \\
+\hline
+PPM\_Flag & Prepayment penalty: Y = Yes, N = No \\
+\hline
+ProductType & FRM = Fixed Rate, ARM = Adjustable Rate \\
+\hline
+PropertyState & Two-letter state or territory code \\
+\hline
+PropertyType & SF = Single-Family, CO = Condo, PU = PUD, MH = Manufactured, CP = Co-op, 99 = Not Available \\
+\hline
+PostalCode & Masked ZIP (first 3 digits + ``00'') \\
+\hline
+LoanPurpose & P = Purchase, C = Refi Cash Out, N = Refi No Cash Out, R = Refi Not Specified, 9 = Not Available \\
+\hline
+OriginalLoanTerm & Scheduled term in months \\
+\hline
+NumberOfBorrowers & Number of borrowers (1--10) \\
+\hline
+SellerName & Entity that sold the loan (``Other Sellers'' if below threshold) \\
+\hline
+ServicerName & Entity servicing the loan (``Other Servicers'' if below threshold) \\
+\hline
+SuperConformingFlag & Indicates ``super conforming'' eligibility where applicable \\
+\hline
+PreHARP\_Flag & Indicators related to HARP/refinance programs \\
+\hline
+ProgramIndicator & Program indicator for special loan programs \\
+\hline
+ReliefRefinanceIndicator & Relief refinance program indicator \\
+\hline
+PropertyValMethod & Appraisal method (e.g., Full, Desktop/AVM, ACE, ACE+PDR) \\
+\hline
+InterestOnlyFlag & Y = interest-only payments required, N = otherwise \\
+\hline
+BalloonIndicator & Y = balloon payment, N = otherwise \\
+\hline
+\end{longtable}
+}
+
+\subsection*{Performance Panel (Temporal) Variables}
+Each loan has 14 months of performance history. For month index $N=0,1,\dots,13$, the following fields repeat:
+
+{\small
+\begin{longtable}{|L{4.5cm}|L{10cm}|}
+\hline
+\textbf{Column Pattern} & \textbf{Description} \\
+\hline
+N\_CurrentActualUPB & Current unpaid principal balance (UPB), incl.\ any non-interest-bearing portion \\
+\hline
+N\_CurrentInterestRate & Mortgage interest rate in effect for that month \\
+\hline
+N\_CurrentNonInterestBearingUPB & Non-interest-bearing UPB (e.g., deferred amounts) \\
+\hline
+N\_EstimatedLTV & Estimated Loan-to-Value (ELTV); 999 may indicate unknown \\
+\hline
+N\_InterestBearingUPB & Portion of UPB that accrues interest \\
+\hline
+N\_LoanAge & Months since first payment (or since modification) \\
+\hline
+N\_MonthlyReportingPeriod & YYYYMM period identifier \\
+\hline
+N\_RemainingMonthsToLegalMaturity & Remaining months to scheduled maturity \\
+\hline
+\end{longtable}
+}
+
+\subsection*{Notes}
+\begin{itemize}
+\item Static variables give borrower/loan context (credit, terms, property).
+\item The panel is short (14 months), so we look for \emph{repayment irregularities} rather than long-term trends.
+\item Special codes are cleaned consistently before modelling.
+\end{itemize}
+
+\end{document}

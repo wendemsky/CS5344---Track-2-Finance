@@ -1,0 +1,103 @@
+[
+  {
+    "timestamp": "2025-10-11T17:08:16.759618",
+    "name": "Exp4.1_Amort_Isotonic",
+    "description": "Isotonic calibration on amortization scores",
+    "auprc": 0.47486136946872737,
+    "auroc": 0.7524683199875613,
+    "improvement_vs_baseline": 142.89584116047433,
+    "improvement_vs_current_best": 4.964935780001634,
+    "components": [
+      "amortization",
+      "isotonic_calibration"
+    ],
+    "params": {
+      "calibration": "isotonic"
+    },
+    "time_seconds": 0.010367870330810547
+  },
+  {
+    "timestamp": "2025-10-11T17:08:18.864404",
+    "name": "Exp4.2_Amort+TinyLOF",
+    "description": "Amort + LOF with tiny weight (0.01)",
+    "auprc": 0.47503426191857834,
+    "auroc": 0.0,
+    "improvement_vs_baseline": 142.98427719620372,
+    "improvement_vs_current_best": 0.03640903660881989,
+    "components": [
+      "amortization",
+      "lof_k6",
+      "tiny_weight_fusion"
+    ],
+    "params": {
+      "w_lof": 0.01
+    },
+    "time_seconds": 2.1015539169311523
+  },
+  {
+    "timestamp": "2025-10-11T17:08:18.872037",
+    "name": "Exp4.3_Geometric_Mean",
+    "description": "Geometric mean of amort and LOF",
+    "auprc": 0.43654012766293854,
+    "auroc": 0.7460849481659884,
+    "improvement_vs_baseline": 123.29418294779467,
+    "improvement_vs_current_best": -8.103443760070883,
+    "components": [
+      "amortization",
+      "lof_k6",
+      "geometric_mean"
+    ],
+    "params": {},
+    "time_seconds": 0.004737377166748047
+  },
+  {
+    "timestamp": "2025-10-11T17:08:18.878932",
+    "name": "Exp4.4_Max_Fusion",
+    "description": "Max of amort and LOF ranks",
+    "auprc": 0.4219427778594668,
+    "auroc": 0.740216816207929,
+    "improvement_vs_baseline": 115.82750785650475,
+    "improvement_vs_current_best": -11.176348384784818,
+    "components": [
+      "amortization",
+      "lof_k6",
+      "max_fusion"
+    ],
+    "params": {},
+    "time_seconds": 0.004644632339477539
+  },
+  {
+    "timestamp": "2025-10-11T17:08:18.916907",
+    "name": "Exp4.5_Power_Transform",
+    "description": "Power transform on amortization (power=0.5)",
+    "auprc": 0.4748613694687274,
+    "auroc": 0.0,
+    "improvement_vs_baseline": 142.8958411604744,
+    "improvement_vs_current_best": -0.03639578525401754,
+    "components": [
+      "amortization",
+      "power_transform"
+    ],
+    "params": {
+      "power": 0.5
+    },
+    "time_seconds": 0.035767555236816406
+  },
+  {
+    "timestamp": "2025-10-11T17:08:18.931030",
+    "name": "Exp4.6_Clip_Extremes",
+    "description": "Clip amortization at 99.5th percentile",
+    "auprc": 0.44998651685187147,
+    "auroc": 0.0,
+    "improvement_vs_baseline": 130.17213138203144,
+    "improvement_vs_current_best": -5.272829156689351,
+    "components": [
+      "amortization",
+      "clipping"
+    ],
+    "params": {
+      "clip_percentile": 99.5
+    },
+    "time_seconds": 0.011975765228271484
+  }
+]

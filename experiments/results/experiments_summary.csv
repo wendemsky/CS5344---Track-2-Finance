@@ -1,0 +1,7 @@
+timestamp,name,description,auprc,auroc,improvement_vs_baseline,improvement_vs_current_best,components,params,time_seconds
+2025-10-11T17:08:16.759618,Exp4.1_Amort_Isotonic,Isotonic calibration on amortization scores,0.47486136946872737,0.7524683199875613,142.89584116047433,4.964935780001634,"['amortization', 'isotonic_calibration']",{'calibration': 'isotonic'},0.010367870330810547
+2025-10-11T17:08:18.864404,Exp4.2_Amort+TinyLOF,Amort + LOF with tiny weight (0.01),0.47503426191857834,0.0,142.98427719620372,0.03640903660881989,"['amortization', 'lof_k6', 'tiny_weight_fusion']",{'w_lof': 0.01},2.1015539169311523
+2025-10-11T17:08:18.872037,Exp4.3_Geometric_Mean,Geometric mean of amort and LOF,0.43654012766293854,0.7460849481659884,123.29418294779467,-8.103443760070883,"['amortization', 'lof_k6', 'geometric_mean']",{},0.004737377166748047
+2025-10-11T17:08:18.878932,Exp4.4_Max_Fusion,Max of amort and LOF ranks,0.4219427778594668,0.740216816207929,115.82750785650475,-11.176348384784818,"['amortization', 'lof_k6', 'max_fusion']",{},0.004644632339477539
+2025-10-11T17:08:18.916907,Exp4.5_Power_Transform,Power transform on amortization (power=0.5),0.4748613694687274,0.0,142.8958411604744,-0.03639578525401754,"['amortization', 'power_transform']",{'power': 0.5},0.035767555236816406
+2025-10-11T17:08:18.931030,Exp4.6_Clip_Extremes,Clip amortization at 99.5th percentile,0.44998651685187147,0.0,130.17213138203144,-5.272829156689351,"['amortization', 'clipping']",{'clip_percentile': 99.5},0.011975765228271484
