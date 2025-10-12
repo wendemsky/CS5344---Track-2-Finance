@@ -480,16 +480,5 @@ auprc = average_precision_score(y_valid, scores)  # Line 296 ✓
 
 
 
-intro
-data 
-eda
-preprocessing
-feature engineering
-{ prof suggested feature correlation ?? }
-base line models 
-comparison analysis
-final model - (7-10 slides)
-results 
 
-plan based on initail result - (5 slides)
 
