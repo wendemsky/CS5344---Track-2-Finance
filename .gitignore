@@ -9,7 +9,6 @@ env/
 ENV/
 
 # Data
-*.csv
 *.npz
 
 # IDE
