@@ -13,6 +13,7 @@ ENV/
 *.npz
 
 # IDE
+.claude/
 .vscode/
 .idea/
 *.swp
@@ -24,11 +25,6 @@ ENV/
 Thumbs.db
 
 # Output
-*.png
-*.jpg
-*.pdf
-*.json
-*.txt
 !requirements.txt
 !README.md
 
