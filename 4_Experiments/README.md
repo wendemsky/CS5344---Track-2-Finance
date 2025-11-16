@@ -9,7 +9,7 @@ Each experiment is standalone and can be run independently:
 ```bash
 cd 4_Experiments
 python exp1_amortization_irregularity_fusion.py
-python exp2_autoencoder_deep_learning.py
+python exp2_autoencoder.py
 python exp3_enhanced_domain_features.py
 python exp4_robust_scaler_preprocessing.py
 python exp5_isolation_forest_baseline.py
