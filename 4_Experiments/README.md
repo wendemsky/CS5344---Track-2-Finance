@@ -34,10 +34,10 @@ Combines amortization shortfall features with payment irregularity signals using
 
 ---
 
-### Experiment 2: Autoencoder Deep Learning
-**File:** `exp2_autoencoder_deep_learning.py`
+### Experiment 2: Autoencoder
+**File:** `exp2_autoencoder.py`
 
-Tests deep learning MLP autoencoder for reconstruction-based anomaly detection.
+Tests MLP autoencoder for reconstruction-based anomaly detection.
 
 **Architecture:**
 - Input: 147 features

@@ -86,7 +86,7 @@ python 3_Baseline/baseline_models.py
 
 # Individual Experiments (7 experiments)
 python 4_Experiments/exp1_amortization_irregularity_fusion.py
-python 4_Experiments/exp2_autoencoder_deep_learning.py  # Requires TensorFlow
+python 4_Experiments/exp2_autoencoder.py  # Requires TensorFlow
 python 4_Experiments/exp3_enhanced_domain_features.py
 python 4_Experiments/exp4_robust_scaler_preprocessing.py
 python 4_Experiments/exp5_isolation_forest_baseline.py
@@ -156,7 +156,7 @@ Evaluation of 10 baseline algorithms (27 configurations) including Isolation For
 
 7 experiments exploring different methodologies:
 - Amortization + irregularity fusion (AUPRC=0.4821)
-- Autoencoder deep learning (AUPRC=0.1677)
+- Autoencoder (AUPRC=0.1677)
 - Enhanced domain features (+144% improvement)
 - Robust scaler preprocessing (+9% improvement)
 - Isolation Forest baseline (AUPRC=0.1589)
