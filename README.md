@@ -1,11 +1,16 @@
 # Loan Anomaly Detection Using Unsupervised Ensemble Methods
 
-CS5344: Big Data Analytics Technology
-National University of Singapore
+**CS5344: Big Data Analytics Technology**
+**National University of Singapore**
+**Group 11: Himanshu Maithani, Roheth Balamurugan**
 
 ## Project Overview
 
-This project implements an unsupervised anomaly detection system for identifying delinquent loans in the Freddie Mac Single-Family Loan-Level Dataset. The final ensemble approach achieves **AUPRC=0.4981** on validation (0.478 on Kaggle), representing a **155% improvement** over the best baseline model.
+This project implements an unsupervised anomaly detection system for identifying delinquent loans in the Freddie Mac Single-Family Loan-Level Dataset. The final ensemble approach achieves:
+
+- **Validation AUPRC: 0.4981** (AUROC: 0.7865)
+- **Kaggle Test AUPRC: 0.478**
+- **155% improvement** over the best baseline model (LOF with AUPRC=0.1955)
 
 ## Repository Structure
 
@@ -21,27 +26,72 @@ Project/
 └── README.md
 ```
 
-## Quick Start
+## Quick Start - Reproduce Final Results
 
 ### 1. Setup Environment
 
+**Prerequisites:**
+- Python 3.8 or higher
+- pip package manager
+
+**Installation:**
+
 ```bash
+# Create virtual environment (recommended)
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On Linux/Mac:
+source venv/bin/activate
+
+# Install required packages
 pip install -r requirements.txt
 ```
 
-### 2. Run Analysis Pipeline
+### 2. Verify Data Files
+
+Ensure the following data files are in the `1_Data/` folder:
+- `loans_train.csv` (30,504 normal loans)
+- `loans_valid.csv` (5,370 loans, 12.61% anomalous)
+- `loans_test.csv` (13,426 loans)
+
+### 3. Run Final Model (Main Submission)
+
+```bash
+# Generate final predictions - takes ~10-15 minutes
+python 5_Final_Approach/final_model.py
+```
+
+**Output:**
+- `5_Final_Approach/submission.csv` - Final Kaggle submission file
+- Console output showing:
+  - Individual detector performance (AUPRC, AUROC)
+  - Fusion strategy results
+  - Final validation metrics
+
+**Expected Results:**
+- Validation AUPRC: ~0.4981
+- Validation AUROC: ~0.7865
+
+### 4. (Optional) Run Other Components
 
 ```bash
 # Exploratory Data Analysis
 python 2_EDA/comprehensive_eda.py
 
-# Baseline Models
+# Baseline Models Evaluation (27 configurations)
 python 3_Baseline/baseline_models.py
 
-# Final Approach
-python 5_Final_Approach/final_model.py
+# Individual Experiments (7 experiments)
+python 4_Experiments/exp1_amortization_irregularity_fusion.py
+python 4_Experiments/exp2_autoencoder_deep_learning.py  # Requires TensorFlow
+python 4_Experiments/exp3_enhanced_domain_features.py
+python 4_Experiments/exp4_robust_scaler_preprocessing.py
+python 4_Experiments/exp5_isolation_forest_baseline.py
+python 4_Experiments/exp6_lof_hyperparameter_tuning.py
+python 4_Experiments/exp7_simple_ensemble_fusion.py
 ```
 
 ## Results Summary
@@ -147,11 +197,37 @@ Optional:
 - Single detector approaches
 - Complex fusion rules (overfitting)
 
-## Competition Compliance
+## Competition Compliance & Reproducibility
 
-- Fully unsupervised (train on normal data only)
-- No validation leakage (train-only fitting)
-- AUPRC as primary metric
+### Data Leakage Prevention
+
+Our implementation strictly follows unsupervised learning principles:
+
+1. **Train-Only Fitting**: All models, scalers, PCA, and detectors are fitted ONLY on `loans_train.csv`
+2. **No Validation Leakage**: Validation data (`loans_valid.csv`) is used ONLY for:
+   - Hyperparameter selection
+   - Fusion strategy selection
+   - Performance evaluation
+3. **Validation labels are NEVER used for training**
+
+**Code Verification:**
+- `FeatureBuilderAdvanced.fit()` is called only on training data (5_Final_Approach/final_model.py:832)
+- All detectors use `novelty=True` or are fitted only on training set
+- Calibration uses training distribution only
+
+### Reproducibility
+
+- **Fixed Random Seeds**: `np.random.default_rng(42)` ensures deterministic results
+- **No External Data**: Uses only provided Kaggle datasets
+- **Version-Locked Dependencies**: See `requirements.txt`
+- **Expected Runtime**: 10-15 minutes on standard laptop (4-core CPU, 8GB RAM)
+
+### Consistency Verification
+
+The submitted `prediction.csv` matches our Kaggle submission (AUPRC=0.478) and is reproducible by running:
+```bash
+python 5_Final_Approach/final_model.py
+```
 
 ## References
 

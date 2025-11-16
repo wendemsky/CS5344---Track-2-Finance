@@ -1,15 +1,27 @@
-# Core dependencies
-numpy>=1.21.0
-pandas>=1.3.0
-scikit-learn>=1.0.0
-scipy>=1.7.0
+# ============================================================
+# CS5344 Big Data Analytics - Loan Anomaly Detection Project
+# Group 11: Himanshu Maithani, Roheth Balamurugan
+# ============================================================
 
-# Visualization
-matplotlib>=3.4.0
-seaborn>=0.11.0
+# REQUIRED DEPENDENCIES FOR FINAL MODEL
+# Install with: pip install -r requirements.txt
 
-# Optional: Deep learning (for autoencoder experiments)
+# Core numerical and data processing
+numpy>=1.21.0,<2.0.0
+pandas>=1.3.0,<3.0.0
+scikit-learn>=1.0.0,<2.0.0
+scipy>=1.7.0,<2.0.0
+
+# Visualization (for EDA and experiments)
+matplotlib>=3.4.0,<4.0.0
+seaborn>=0.11.0,<1.0.0
+
+# ============================================================
+# OPTIONAL DEPENDENCIES (not required for final model)
+# ============================================================
+
+# Deep learning (only for Experiment 2: Autoencoder)
 # tensorflow>=2.8.0
 
-# Optional: Advanced anomaly detection (for PyOD experiments)
+# Advanced anomaly detection library (for experimental comparisons)
 # pyod>=1.0.0

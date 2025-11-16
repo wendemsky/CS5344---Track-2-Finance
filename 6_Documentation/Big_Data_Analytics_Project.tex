@@ -601,6 +601,14 @@ A key part of our iterative process was identifying approaches that did not work
 For instance, as shown in Table~\ref{tab:baseline_comparison}, standard PCA dimensionality reduction hurt the performance of simple LOF baselines, and our early experiments showed that deep learning autoencoders (AUPRC $\sim$0.17) and standard Isolation Forest (AUPRC $\sim$0.15) significantly underperformed density-based and domain-specific methods.
 This reinforced our focus on high-quality feature engineering over model complexity.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{fig_key_engineered_feature_corr.pdf}
+    \caption{Correlation heatmap of key engineered features (static risk ratios, amortisation features, and temporal trends/volatilities).
+    The features are moderately correlated but not redundant, indicating that each adds distinct information to the anomaly detectors.}
+    \label{fig:key_engineered_feature_corr}
+\end{figure}
+
 \subsection{Value of Heterogeneous Ensembles}
 Combining detectors that operate on different principles (density-based like LOF, tree-based like Isolation Forest and RFOD, distance-based like Mahalanobis, and rule-based like amortisation shortfall) improves robustness.
 No single method dominates across all loans, but a well-designed ensemble, especially with fusion rules that weight top performers and respect their strengths, substantially improves AUPRC.
@@ -636,14 +644,6 @@ Finally, online adaptation as new performance data arrives could enable the syst
 \label{sec:appendix}
 
 This appendix collects additional figures that provide further insight and diagnostics, but are not essential to the main narrative.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{fig_key_engineered_feature_corr.pdf}
-    \caption{Correlation heatmap of key engineered features (static risk ratios, amortisation features, and temporal trends/volatilities).
-    The features are moderately correlated but not redundant, indicating that each adds distinct information to the anomaly detectors.}
-    \label{fig:key_engineered_feature_corr}
-\end{figure}
 
 \begin{figure}[t]
     \centering
